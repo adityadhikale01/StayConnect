@@ -1,0 +1,29 @@
+<% layout('layouts/boilerplate') %>
+<body>
+    
+
+<h3>New Listing</h3>
+   <form action="/listings" method="post">
+  <div class="mb-2">
+    <label for="title-label" class="form-label">Title for Listing</label>
+    <input type="text" name="title" class="form-control" id="title-label" aria-describedby="emailHelp">
+    
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <input type="text" name="description" class="form-control" id="description">
+  </div>
+  <div class="mb-3">
+    <label for="price" class="form-label">Price</label>
+    <input type="number" name="price" class="form-control" id="price">
+  </div>
+  <div class="mb-3">
+    <label for="location" class="form-label">Location</label>
+    <input type="text" name="location" class="form-control" id="location">
+  </div>
+  <div class="mb-3">
+    <label for="country" class="form-label">Country</label>
+    <input type="text" name="country" class="form-control" id="country">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</body>

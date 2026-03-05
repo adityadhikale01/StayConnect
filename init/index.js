@@ -17,20 +17,10 @@ main()
 async function main() {
   await mongoose.connect(MONGO_URL);
   await initDB();
-  app.listen(3000, () => {
-    console.log("server is running on port 3000");
-  });
 }
 
 const initDB = async () => {
   await Listing.deleteMany({});
-
-  // Transform data to match schema (image should be URL string, not object)
-  const transformedData = initData.data.map(item => ({
-    ...item,
-    image: item.image.url
-  }));
-
-  await Listing.insertMany(transformedData);
+  await Listing.insertMany(initData.data);
   console.log("data was initialized");
 };

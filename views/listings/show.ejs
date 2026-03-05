@@ -1,0 +1,21 @@
+<% layout('layouts/boilerplate') %>
+<body>
+    <div class="details-container">
+        <h1><%= show_listing.title %></h1>
+        <img src="<%= show_listing.image %>" class="img-fluid" alt="Listing Image" style="max-width: 400px;">
+        <p><%= show_listing.description %></p>
+        <p>Price: <%= show_listing.price %></p>
+        <p>Location: <%= show_listing.location %></p>
+        <p>Country: <%= show_listing.country %></p>
+        <a class="btn btn-primary" href="/listings/<%= show_listing._id %>/edit" role="button">Edit</a>
+        <form action="/listings/<%= show_listing._id %>?_method=DELETE" method="post">
+            
+            <button class="btn btn-danger" type="submit">Delete</button>
+        </form>
+    </div>
+    <hr>
+    <hr>
+</body>
+
+
+   

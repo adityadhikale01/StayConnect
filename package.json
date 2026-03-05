@@ -1,0 +1,29 @@
+{
+  "name": "stayconnect",
+  "version": "1.0.0",
+  "description": "\"Travel Website\"",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adityadhikale01/StayConnect.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adityadhikale01/StayConnect/issues"
+  },
+  "homepage": "https://github.com/adityadhikale01/StayConnect#readme",
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "ejs-mate": "^4.0.0",
+    "express": "^5.2.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^9.2.4",
+    "nodemon": "^3.1.14",
+    "path": "^0.12.7"
+  }
+}
