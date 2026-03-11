@@ -16,11 +16,14 @@
     </div>
    
     <div class="reviews-form ">
-        <form action="/listings/<%= show_listing._id %>/reviews" method="post">
+        <form action="/listings/<%= show_listing._id %>/reviews"  novalidate class="needs-validation" method="post">
             <div class="row">
-            <div class="mb-3 col">
+            <div class="mb-3 col ">
                 <label for="comment" class="form-label">Review:</label>
-                <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+                <textarea class="form-control " id="comment" name="comment" rows="3" required></textarea>
+                <div class="invalid-feedback text-white" >
+                  Please Enter A Comment!
+                </div>
             </div>
             <div class="mb-3 col">
                 <label for="rating" class="form-label ">Rating:</label>
