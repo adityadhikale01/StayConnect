@@ -1,12 +1,12 @@
 <% layout('layouts/boilerplate') %>
 <body>
-    <div class="details-container">
+    <div class="details-container ">
         <h1><%= show_listing.title %></h1>
         <img src="<%= show_listing.image %>" class="img-fluid" alt="Listing Image" style="max-width: 400px;">
         <p><%= show_listing.description %></p>
-        <p>Price: <%= show_listing.price %></p>
-        <p>Location: <%= show_listing.location %></p>
-        <p>Country: <%= show_listing.country %></p>
+        <p> <b>Price:</b> <%= show_listing.price %></p>
+        <p> <b>Location:</b> <%= show_listing.location %></p>
+        <p> <b>Country:</b> <%= show_listing.country %></p>
         <a class="btn btn-primary" href="/listings/<%= show_listing._id %>/edit" role="button">Edit</a>
         <form action="/listings/<%= show_listing._id %>?_method=DELETE" method="post">
             
@@ -15,6 +15,37 @@
     </div>
     <hr>
     <hr>
+    <div class="reviews-form">
+        <form action="/listings/:id/reviews">
+            <div class="mb-3">
+                <label for="content" class="form-label">Review:</label>
+                <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating:</label>
+                <select class="form-select" id="rating" name="rating" required>
+                    <option value="">Select a rating</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Submit Review</button>
+        </form>
+    </div>
+    <div class="reviews">
+        <h2>Reviews</h2>
+        <% for(let review of show_listing.reviews) { %>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text"><%= review.content %></p>
+                    <p class="card-text"><small class="text-muted">Rating: <%= review.rating %>/5</small></p>
+                </div>
+            </div>
+        <% } %>
+    </div>
 </body>
 
 
