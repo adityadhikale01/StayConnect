@@ -16,10 +16,10 @@
     <hr>
     <hr>
     <div class="reviews-form">
-        <form action="/listings/:id/reviews">
+        <form action="/listings/<%= show_listing._id %>/reviews" method="post">
             <div class="mb-3">
-                <label for="content" class="form-label">Review:</label>
-                <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                <label for="comment" class="form-label">Review:</label>
+                <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
             </div>
             <div class="mb-3">
                 <label for="rating" class="form-label">Rating:</label>
@@ -40,7 +40,7 @@
         <% for(let review of show_listing.reviews) { %>
             <div class="card mb-3">
                 <div class="card-body">
-                    <p class="card-text"><%= review.content %></p>
+                    <p class="card-text"><%= review.comment %></p>
                     <p class="card-text"><small class="text-muted">Rating: <%= review.rating %>/5</small></p>
                 </div>
             </div>

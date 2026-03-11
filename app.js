@@ -8,7 +8,7 @@ import methodOverride from 'method-override';
 import ejsMate from 'ejs-mate';
 import Review from './models/reviews.js';
 import WrapAsync from './utils/WrapAsync.js';
-
+import {ExpressError} from './utils/Expresserror.js';
 
 app.engine('ejs', ejsMate);
 
@@ -36,8 +36,16 @@ async function main() {
   await mongoose.connect(MONGO_URL);
 }
 
+/*  MIDDLWARE FOR ERROR HANDLING */
+app.use((err, req, res, next) => {
+    const { statusCode = 500 ,message= "Something went wrong!" } = err;
+    res.status(statusCode).render('error.ejs', {message });
+});
+
+
+
 app.get('/listings',WrapAsync(async (req, res) => {
-   
+        
         const allListings = await Listing.find({});
         
         res.render('listings/index.ejs', { layout: 'layouts/boilerplate', allListings });
@@ -46,7 +54,7 @@ app.get('/listings',WrapAsync(async (req, res) => {
 );
 
 app.get("/listings/new",(req, res) => {
-  console.log("Rendering new listing form");
+    console.log("Rendering new listing form");
     res.render("listings/new.ejs", { layout: 'layouts/boilerplate' });
 });
 
@@ -54,7 +62,8 @@ app.get("/listings/:id",WrapAsync(async (req, res) => {
     
         const { id } = req.params;
         
-        const show_listing = await Listing.findById(id);
+        // populate reviews so we can render them
+        const show_listing = await Listing.findById(id).populate('reviews');
       
         if (show_listing) {
             res.render("listings/show.ejs", { layout: 'layouts/boilerplate', show_listing });
@@ -113,10 +122,18 @@ app.post("/listings/:id/reviews", WrapAsync(async (req, res) => {
   const { id } = req.params;
   const { rating, comment } = req.body;
   
+    // make sure the listing actually exists
+    const listing = await Listing.findById(id);
+    if (!listing) {
+      throw new Error("Listing not found");
+    }
+
+    // create and persist the review first
     const newReview = new Review({ rating, comment });
     await newReview.save();
-    const listing = await Listing.findById(id);
-    listing.reviews.push(newReview);
+    
+    // store just the ObjectId in the reviews array
+    listing.reviews.push(newReview._id);
     await listing.save();
     res.redirect(`/listings/${id}`);
   
