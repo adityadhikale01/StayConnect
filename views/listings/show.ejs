@@ -1,5 +1,6 @@
 <% layout('layouts/boilerplate') %>
-<body>
+<body >
+    <div class="show-body">
     <div class="details-container ">
         <h1><%= show_listing.title %></h1>
         <img src="<%= show_listing.image %>" class="img-fluid" alt="Listing Image" style="max-width: 400px;">
@@ -13,17 +14,17 @@
             <button class="btn btn-danger" type="submit">Delete</button>
         </form>
     </div>
-    <hr>
-    <hr>
-    <div class="reviews-form">
+   
+    <div class="reviews-form ">
         <form action="/listings/<%= show_listing._id %>/reviews" method="post">
-            <div class="mb-3">
+            <div class="row">
+            <div class="mb-3 col">
                 <label for="comment" class="form-label">Review:</label>
                 <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
             </div>
-            <div class="mb-3">
-                <label for="rating" class="form-label">Rating:</label>
-                <select class="form-select" id="rating" name="rating" required>
+            <div class="mb-3 col">
+                <label for="rating" class="form-label ">Rating:</label>
+                <select class="form-select " id="rating" name="rating" required>
                     <option value="">Select a rating</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -32,10 +33,12 @@
                     <option value="5">5</option>
                 </select>
             </div>
+        </div>
             <button type="submit" class="btn btn-success">Submit Review</button>
         </form>
     </div>
-    <div class="reviews">
+    
+    <div class=" reviews" id="reviews">
         <h2>Reviews</h2>
         <% for(let review of show_listing.reviews) { %>
             <div class="card mb-3">
@@ -46,6 +49,7 @@
             </div>
         <% } %>
     </div>
+</div>
 </body>
 
 

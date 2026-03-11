@@ -36,13 +36,9 @@ async function main() {
   await mongoose.connect(MONGO_URL);
 }
 
-/*  MIDDLWARE FOR ERROR HANDLING */
-app.use((err, req, res, next) => {
-    const { statusCode = 500 ,message= "Something went wrong!" } = err;
-    res.status(statusCode).render('error.ejs', {message });
-});
 
 
+/* INDEX ROUTE */
 
 app.get('/listings',WrapAsync(async (req, res) => {
         
@@ -53,27 +49,34 @@ app.get('/listings',WrapAsync(async (req, res) => {
     
 );
 
+/* NEW ROUTE */
+
 app.get("/listings/new",(req, res) => {
     console.log("Rendering new listing form");
     res.render("listings/new.ejs", { layout: 'layouts/boilerplate' });
 });
 
+/* SHOW ROUTE */
+
 app.get("/listings/:id",WrapAsync(async (req, res) => {
     
         const { id } = req.params;
-        
+        if(!id){
+            throw new ExpressError("Invalid listing ID", 400);
+        }
         // populate reviews so we can render them
         const show_listing = await Listing.findById(id).populate('reviews');
       
         if (show_listing) {
             res.render("listings/show.ejs", { layout: 'layouts/boilerplate', show_listing });
         } else {
-           throw new Error("Listing not found");
+           throw new ExpressError("Listing not found", 404);
         }
       
     })
   );
 
+/* CREATE ROUTE */
 
 app.post("/listings",WrapAsync( async (req, res) => {
   const {title, description, price, location, country} = req.body;
@@ -86,6 +89,8 @@ app.post("/listings",WrapAsync( async (req, res) => {
 })
 );
 
+/* DELETE ROUTE */
+
 app.delete("/listings/:id",WrapAsync(async (req, res) => {
   const { id } = req.params;
     await Listing.findByIdAndDelete(id);
@@ -94,6 +99,8 @@ app.delete("/listings/:id",WrapAsync(async (req, res) => {
   
 })
 );
+
+/* EDIT ROUTE */
 
 app.get("/listings/:id/edit" ,WrapAsync(async (req,res)=>{
  
@@ -108,6 +115,7 @@ app.get("/listings/:id/edit" ,WrapAsync(async (req,res)=>{
         }
       
 }));
+/* UPDATE ROUTE */
 
 app.put("/listings/:id",WrapAsync( async (req, res) => {
   const { id } = req.params;
@@ -138,6 +146,12 @@ app.post("/listings/:id/reviews", WrapAsync(async (req, res) => {
     res.redirect(`/listings/${id}`);
   
 }));
+
+/*  MIDDLWARE FOR ERROR HANDLING */
+app.use((err, req, res, next) => {
+    const { statusCode = 500 ,message= "Something went wrong!" } = err;
+    res.status(statusCode).render('listings/error.ejs', {message });
+});
 
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
