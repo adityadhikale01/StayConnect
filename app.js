@@ -6,9 +6,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import methodOverride from 'method-override';
 import ejsMate from 'ejs-mate';
-import Review from './models/reviews.js';
-import WrapAsync from './utils/WrapAsync.js';
-import {ExpressError} from './utils/Expresserror.js';
+
+import {listingSchema} from './schema.js';
+
+import listings from './routes/listings.js';
+import reviews from './routes/reviews.js';
 
 app.engine('ejs', ejsMate);
 
@@ -36,116 +38,21 @@ async function main() {
   await mongoose.connect(MONGO_URL);
 }
 
+/*  VALIDATION MIDDLEWARE */
+const validateListing = (req, res, next) => {
+  let {error} = listingSchema.validate(req.body);
+  if (error) {
+    throw new ExpressError(error.details.map(d => d.message).join(', '), 400);
+  }
+  next();
+};
+
+/* ROUTES */
+
+app.use("/listings",listings);
+app.use("/listings/:id/reviews", reviews);
 
 
-/* INDEX ROUTE */
-
-app.get('/listings',WrapAsync(async (req, res) => {
-        
-        const allListings = await Listing.find({});
-        
-        res.render('listings/index.ejs', { layout: 'layouts/boilerplate', allListings });
-})
-    
-);
-
-/* NEW ROUTE */
-
-app.get("/listings/new",(req, res) => {
-    console.log("Rendering new listing form");
-    res.render("listings/new.ejs", { layout: 'layouts/boilerplate' });
-});
-
-/* SHOW ROUTE */
-
-app.get("/listings/:id",WrapAsync(async (req, res) => {
-    
-        const { id } = req.params;
-        if(!id){
-            throw new ExpressError("Invalid listing ID", 400);
-        }
-        // populate reviews so we can render them
-        const show_listing = await Listing.findById(id).populate('reviews');
-      
-        if (show_listing) {
-            res.render("listings/show.ejs", { layout: 'layouts/boilerplate', show_listing });
-        } else {
-           throw new ExpressError("Listing not found", 404);
-        }
-      
-    })
-  );
-
-/* CREATE ROUTE */
-
-app.post("/listings",WrapAsync( async (req, res) => {
-  const {title, description, price, location, country} = req.body;
- 
-    const newListing = new Listing({ title, description, price, location, country });
-    await newListing.save();
-    res.redirect("/listings");
-  
-  
-})
-);
-
-/* DELETE ROUTE */
-
-app.delete("/listings/:id",WrapAsync(async (req, res) => {
-  const { id } = req.params;
-    await Listing.findByIdAndDelete(id);
-    res.redirect("/listings");
- 
-  
-})
-);
-
-/* EDIT ROUTE */
-
-app.get("/listings/:id/edit" ,WrapAsync(async (req,res)=>{
- 
-        const { id } = req.params;
-        
-        const edit_listing = await Listing.findById(id);
-      
-        if (edit_listing) {
-            res.render("listings/edit.ejs", { layout: 'layouts/boilerplate', edit_listing });
-        } else {
-           throw new Error("Listing not found");
-        }
-      
-}));
-/* UPDATE ROUTE */
-
-app.put("/listings/:id",WrapAsync( async (req, res) => {
-  const { id } = req.params;
-  const { title, description, price, location, country } = req.body;
-
-    await Listing.findByIdAndUpdate(id, { title, description, price, location, country });
-    res.redirect(`/listings/${id}`);
-  
-}));
-
-app.post("/listings/:id/reviews", WrapAsync(async (req, res) => {
-  const { id } = req.params;
-  const { rating, comment } = req.body;
-  
-    // make sure the listing actually exists
-    const listing = await Listing.findById(id);
-    if (!listing) {
-      throw new Error("Listing not found");
-    }
-
-    // create and persist the review first
-    const newReview = new Review({ rating, comment });
-    await newReview.save();
-    
-    // store just the ObjectId in the reviews array
-    listing.reviews.push(newReview._id);
-    await listing.save();
-    res.redirect(`/listings/${id}`);
-  
-}));
 
 /*  MIDDLWARE FOR ERROR HANDLING */
 app.use((err, req, res, next) => {

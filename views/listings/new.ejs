@@ -2,26 +2,41 @@
 <body>
     
 <h3>New Listing</h3>
-   <form action="/listings" method="post">
+   <form action="/listings" class="needs-validation" novalidate method="post">
   <div class="mb-2">
     <label for="title-label" class="form-label">Title for Listing</label>
-    <input type="text" name="title" class="form-control" id="title-label" aria-describedby="emailHelp">
-    
+    <input type="text" name="title" class="form-control" id="title-label" aria-describedby="emailHelp" required>
+    <div class="invalid-feedback text-white">
+      Please Enter  Title!
+    </div>
+  </div>
   <div class="mb-3">
     <label for="description" class="form-label">Description</label>
-    <input type="text" name="description" class="form-control" id="description">
+    <input type="text" name="description" class="form-control" id="description" required>
+    <div class="invalid-feedback text-white">
+      Please Enter Description!
+    </div>
   </div>
   <div class="mb-3">
     <label for="price" class="form-label">Price</label>
-    <input type="number" name="price" class="form-control" id="price">
+    <input type="number" name="price" class="form-control" id="price" required>
+    <div class="invalid-feedback text-white">
+      Please Enter  Price!
+    </div>
   </div>
   <div class="mb-3">
     <label for="location" class="form-label">Location</label>
-    <input type="text" name="location" class="form-control" id="location">
+    <input type="text" name="location" class="form-control" id="location" required>
+    <div class="invalid-feedback text-white">
+      Please Enter Location!
+    </div>
   </div>
   <div class="mb-3">
     <label for="country" class="form-label">Country</label>
-    <input type="text" name="country" class="form-control" id="country">
+    <input type="text" name="country" class="form-control" id="country" required>
+    <div class="invalid-feedback text-white">
+      Please Enter Country!
+    </div>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>

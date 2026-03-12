@@ -15,6 +15,13 @@ const listingSchema = new schema({
          ref: "Review" 
         }]
 
+}); 
+
+// Delete all reviews associated with the listing
+listingSchema.post("findOneAndDelete", async (listing) => {
+  if (listing) {  
+  await Review.deleteMany({ _id: { $in: listing.reviews } });
+  }
 });
 
 const Listing = mongoose.model('Listing', listingSchema);
