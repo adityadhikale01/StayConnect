@@ -2,14 +2,14 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
+    
     margin: 0;
 }
 
 .container {
     display: flex;
-    flex-wrap: wrap;
-    min-height: 100vh;
+    flex-direction: column;
+    justify-content: center;
     padding: 20px;
 }
 

@@ -6,6 +6,7 @@ import Listing from '../models/listings.js';
 import { listingSchema } from '../schema.js';
 import Review from '../models/reviews.js';
 
+import flash from 'connect-flash';
 
 const validateListing = (req, res, next) => {
   
@@ -58,7 +59,9 @@ router.get("/:id",WrapAsync(async (req, res) => {
 router.post("/", validateListing, WrapAsync( async (req, res) => {
     const { title, description, price, location, country } = req.body;
     const newListing = new Listing({ title, description, price, location, country });
+
     await newListing.save();
+    req.flash('success', 'Listing created successfully!');
     res.redirect("/listings");
   
   
@@ -70,6 +73,7 @@ router.post("/", validateListing, WrapAsync( async (req, res) => {
 router.delete("/:id",WrapAsync(async (req, res) => {
   const { id } = req.params;
     await Listing.findByIdAndDelete(id);
+    req.flash('success', 'Listing deleted successfully!');
     res.redirect("/listings");
  
   

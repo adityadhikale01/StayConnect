@@ -6,6 +6,7 @@ import Review from '../models/reviews.js';
 import Listing from '../models/listings.js';
 import { reviewSchema } from '../schema.js';
 
+
 // validation middleware for reviews
 const validateReview = (req, res, next) => {
   let {error} = reviewSchema.validate({ review: req.body });
@@ -16,7 +17,7 @@ const validateReview = (req, res, next) => {
   next();
 };
 
-
+// CREATE REVIEW ROUTE
 router.post("/", validateReview, WrapAsync(async (req, res) => {
   const { id } = req.params;
   const { rating, comment } = req.body;
@@ -35,6 +36,7 @@ router.post("/", validateReview, WrapAsync(async (req, res) => {
     // store just the ObjectId in the reviews array
     listing.reviews.push(newReview._id);
     await listing.save();
+    req.flash('success', 'Review added successfully!');
     res.redirect(`/listings/${id}`);
   
 }));
@@ -55,10 +57,10 @@ router.delete("/:ReviewsId", WrapAsync(async (req, res) => {
   // remove the review reference from the listing's reviews array
   listing.reviews.pull(ReviewsId);
   await listing.save();
-  console.log("Removed review reference from listing:", listing);
+  
   // delete the review document itself
   await Review.findByIdAndDelete(ReviewsId);
-  console.log("Deleted review document with ID:", ReviewsId);
+  req.flash('success', 'Review deleted successfully!');
   res.redirect("/listings/" + id);
 }));
 
