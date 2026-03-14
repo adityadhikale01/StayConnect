@@ -1,5 +1,27 @@
 <% layout('layouts/boilerplate') %>
 <body >
+    <style>
+        /* Star Rating Styles */
+        .star-rating { display: inline-flex; gap: 6px; align-items: center; }
+        .star-rating .star-btn { 
+            background: none; 
+            border: none; 
+            padding: 4px; 
+            cursor: pointer; 
+            font-size: 1.8rem; 
+            line-height: 1; 
+            color: #c7c7c7; 
+            transition: transform 0.1s ease, color 0.2s ease; 
+        }
+        .star-rating .star-btn:focus { outline: 2px solid rgba(102,126,234,0.6); outline-offset: 2px; border-radius: 4px; }
+        .star-rating .star-btn.filled { color: #f5a623; }
+        .star-rating .star-btn.hovered { color: #ffcc66; transform: scale(1.05); }
+        .rating-hint { margin-left: 8px; font-size: 0.95rem; color: #555; }
+
+        .review-stars { display: inline-flex; gap: 4px; }
+        .review-stars .star { font-size: 1.2rem; color: #f5a623; }
+        .review-stars .star.inactive { color: #c7c7c7; }
+    </style>
     <div class="show-body">
     <div class="details-container ">
         <h1><%= show_listing.title %></h1>
@@ -26,16 +48,16 @@
                 </div>
             </div>
             <div class="mb-3 col">
-                <label for="rating" class="form-label ">Rating:</label>
-                <select class="form-select " id="rating" name="rating" required>
-                    <option value="">Select a rating</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-
-                </select>
+                <label class="form-label">Rating:</label>
+                <input type="hidden" id="rating" name="rating" required value="">
+                <div class="star-rating" role="radiogroup" aria-label="Select rating" data-input-id="rating">
+                    <button type="button" class="star-btn" role="radio" aria-label="1 star" aria-checked="false" data-value="1">&#9733;</button>
+                    <button type="button" class="star-btn" role="radio" aria-label="2 stars" aria-checked="false" data-value="2">&#9733;</button>
+                    <button type="button" class="star-btn" role="radio" aria-label="3 stars" aria-checked="false" data-value="3">&#9733;</button>
+                    <button type="button" class="star-btn" role="radio" aria-label="4 stars" aria-checked="false" data-value="4">&#9733;</button>
+                    <button type="button" class="star-btn" role="radio" aria-label="5 stars" aria-checked="false" data-value="5">&#9733;</button>
+                    <span class="rating-hint text-muted ms-2">Click a star</span>
+                </div>
             </div>
         </div>
             <button type="submit" class="btn btn-success">Submit Review</button>
@@ -49,7 +71,13 @@
         <div class="card-body">
             <h6 class="card-title">Review</h6>
             <p class="card-text"><%= review.comment %></p>
-            <p class="card-text"><small class="text-muted">Rating: <%= review.rating %>/5</small></p>
+            <div class="card-text">
+                <div class="review-stars" aria-label="Rating: <%= review.rating %> out of 5">
+                    <% for (let i = 1; i <= 5; i++) { %>
+                        <span class="star <%= i <= review.rating ? '' : 'inactive' %>">&#9733;</span>
+                    <% } %>
+                </div>
+            </div>
             <p><small class="text-muted">Created: <%= review.CreatedAt.toLocaleString() %></small></p>
             <form action="/listings/<%= show_listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="post">
                 <button class="btn btn-danger btn-sm" type="submit">Delete</button>
@@ -59,6 +87,71 @@
 <% } %>
     </div>
 </div>
+
+<script>
+        // Interactive star rating widget
+        (function() {
+            function initStarWidget(container) {
+                var inputId = container.getAttribute('data-input-id');
+                var hiddenInput = document.getElementById(inputId);
+                if (!hiddenInput) return;
+                var buttons = Array.prototype.slice.call(container.querySelectorAll('.star-btn'));
+
+                function setVisual(value) {
+                    buttons.forEach(function(btn) {
+                        var v = parseInt(btn.getAttribute('data-value'), 10);
+                        btn.classList.toggle('filled', v <= value);
+                        btn.setAttribute('aria-checked', String(v === value));
+                    });
+                }
+
+                function onHover(value) {
+                    buttons.forEach(function(btn) {
+                        var v = parseInt(btn.getAttribute('data-value'), 10);
+                        btn.classList.toggle('hovered', v <= value);
+                    });
+                }
+
+                function clearHover() {
+                    buttons.forEach(function(btn) { btn.classList.remove('hovered'); });
+                }
+
+                buttons.forEach(function(btn) {
+                    btn.addEventListener('mouseenter', function() { onHover(parseInt(btn.getAttribute('data-value'), 10)); });
+                    btn.addEventListener('mouseleave', clearHover);
+                    btn.addEventListener('click', function() {
+                        var v = parseInt(btn.getAttribute('data-value'), 10);
+                        hiddenInput.value = v;
+                        setVisual(v);
+                        clearHover();
+                        container.querySelector('.rating-hint')?.classList.add('d-none');
+                    });
+                    btn.addEventListener('keydown', function(e) {
+                        var current = parseInt(hiddenInput.value || '0', 10);
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            var nv = Math.min(5, (current || 0) + 1);
+                            hiddenInput.value = nv; setVisual(nv);
+                        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            var nv2 = Math.max(1, (current || 2) - 1);
+                            hiddenInput.value = nv2; setVisual(nv2);
+                        } else if (e.key === ' ' || e.key === 'Enter') {
+                            e.preventDefault(); btn.click();
+                        }
+                    });
+                });
+
+                // Initialize with existing value if present
+                var initial = parseInt(hiddenInput.value || '0', 10);
+                if (initial > 0) setVisual(initial);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.star-rating[data-input-id]').forEach(function(el){ initStarWidget(el); });
+            });
+        })();
+</script>
 </body>
 
 

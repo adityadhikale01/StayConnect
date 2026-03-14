@@ -7,7 +7,14 @@ import ejsMate from 'ejs-mate';
 import session from 'express-session';
 import listings from './routes/listings.js';
 import reviews from './routes/reviews.js';
+import Users from './routes/users.js';
 import flash from 'connect-flash';
+import User from './models/users.js';
+import  passport from 'passport';
+import localStratagy from 'passport-local';
+
+
+
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -29,6 +36,21 @@ const sessionOptions = {
 };
 // Middleware to handle sessions
 app.use(session(sessionOptions));
+
+// Middleware to handle flash messages (temporary messages stored in the session)
+app.use(flash());
+
+// Initialize Passport and use it to manage user sessions
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Configure Passport local strategy
+passport.use(new localStratagy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+
 // Middleware to override HTTP methods (e.g., for PUT and DELETE requests)
 app.use(methodOverride('_method'));
 // Middleware to parse incoming request bodies(form data for POST and PUT requests)
@@ -55,8 +77,6 @@ async function main() {
   await mongoose.connect(MONGO_URL);
 }
 
-// Middleware to handle flash messages (temporary messages stored in the session)
-app.use(flash());
 
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
@@ -67,6 +87,7 @@ app.use((req, res, next) => {
 
 
 // Routes for listings and reviews
+app.use("/users", Users);
 app.use("/listings",listings);
 app.use("/listings/:id/reviews", reviews);
 
