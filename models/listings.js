@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import Review from '../models/reviews.js';
 
 const schema = mongoose.Schema;
 
@@ -13,13 +13,17 @@ const listingSchema = new schema({
     reviews: [
         { type: schema.Types.ObjectId,
          ref: "Review" 
-        }]
+        }],
+    owner:{
+      type:schema.Types.ObjectId,
+      ref:"User"
+    }
 
 }); 
 
 // Delete all reviews associated with the listing
 listingSchema.post("findOneAndDelete", async (listing) => {
-  if (listing) {  
+  if (listing.reviews.length) {  
   await Review.deleteMany({ _id: { $in: listing.reviews } });
   }
 });

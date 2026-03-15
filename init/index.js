@@ -1,8 +1,8 @@
-const express = require("express");
+import express from 'express';
 const app = express();
-const mongoose = require("mongoose");
-const initData = require("./data.js");
-const { Listing } = require("../models/listings.js"); 
+import mongoose from 'mongoose';
+import initData from './data.js';
+import Listing from '../models/listings.js';
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/StayConnect";
 
@@ -21,6 +21,11 @@ async function main() {
 
 const initDB = async () => {
   await Listing.deleteMany({});
+  
+  initData.data=initData.data.map((obj)=>({
+    ...obj,
+    owner:"69b632782afab21c706bea7e",
+  }));
   await Listing.insertMany(initData.data);
   console.log("data was initialized");
 };

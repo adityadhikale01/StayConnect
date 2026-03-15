@@ -14,10 +14,31 @@
         </li>    
       </ul>
 
-      <form class="d-flex" role="search">
+      <form class="d-flex center" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
         <button class="btn btn-outline-success" type="submit">Search</button>
+
       </form>
+
+    </div>
+     <div class="navbar nav ms-auto" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+       <% if(!currUser) { %>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/signup">sign up</a>
+        </li>
+        
+         <li class="nav-item">
+          <a class="nav-link" href="/users/login">log in</a>
+        </li>    
+        <% } %>
+        <% if(currUser) { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/logout">log out</a>
+        </li> 
+        <% } %>
+      </ul>
+      
     </div>
   </div>
 </nav>

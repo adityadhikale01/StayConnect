@@ -1,10 +1,10 @@
-<%layout("/layouts/boilerplatte")%>
+<%layout("layouts/boilerplate")%>
 <body>
     <div class="row">
 
         <div class="col-md-6 offset-md-3">
             <h1 class="text-center">Login to StayConnect</h1>
-            <% include('/includes/flash.ejs') %>
+            <% include('../includes/flash') %>
             <form action="/users/login" method="POST">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>

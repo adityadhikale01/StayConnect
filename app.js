@@ -32,7 +32,8 @@ const sessionOptions = {
         httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week expiry date
         maxAge: 1000 * 60 * 60 * 24 * 7
-    }
+    },
+    
 };
 // Middleware to handle sessions
 app.use(session(sessionOptions));
@@ -81,6 +82,7 @@ async function main() {
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
+    res.locals.currUser = req.user;
     next();
 });
 

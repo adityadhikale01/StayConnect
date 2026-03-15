@@ -26,16 +26,19 @@
     <div class="details-container ">
         <h1><%= show_listing.title %></h1>
         <img src="<%= show_listing.image %>" class="img-fluid" alt="Listing Image" style="max-width: 400px;">
+        <p>Owner Of Listings:@<i><%=show_listing.owner.username%></i></p>
         <p><%= show_listing.description %></p>
         <p> <b>Price:</b> <%= show_listing.price %></p>
         <p> <b>Location:</b> <%= show_listing.location %></p>
         <p> <b>Country:</b> <%= show_listing.country %></p>
+        <% if(currUser && currUser._id.equals(show_listing.owner._id)) {%>
         <a class="btn btn-primary" href="/listings/<%= show_listing._id %>/edit" role="button">Edit</a>
         <form action="/listings/<%= show_listing._id %>?_method=DELETE" method="post">
             
             <button class="btn btn-danger" type="submit">Delete</button>
         </form>
-    </div>
+        <% } %>
+     </div>
    
     <div class="reviews-form ">
         <form action="/listings/<%= show_listing._id %>/reviews"  novalidate class="needs-validation" method="post">
