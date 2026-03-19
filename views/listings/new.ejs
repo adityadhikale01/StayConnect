@@ -2,46 +2,46 @@
 <body>
     
 <h3>New Listing</h3>
-   <form action="/listings" class="needs-validation" novalidate method="post">
+   <form action="/listings" class="needs-validation" novalidate enctype="multipart/form-data" method="post">
   <div class="mb-2">
     <label for="title-label" class="form-label">Title for Listing</label>
-    <input type="text" name="title" class="form-control" id="title-label" aria-describedby="emailHelp" required>
+    <input type="text" name="listing[title]" class="form-control" id="title-label" aria-describedby="emailHelp" required>
     <div class="invalid-feedback text-white">
       Please Enter  Title!
     </div>
   </div>
   <div class="mb-3">
     <label for="description" class="form-label">Description</label>
-    <input type="text" name="description" class="form-control" id="description" required>
+    <input type="text" name="listing[description]" class="form-control" id="description" required>
     <div class="invalid-feedback text-white">
       Please Enter Description!
     </div>
     
   </div>
   <div class="mb-3">
-    <label for="image" class="form-label">Image URL</label>
-    <input type="text" name="image" class="form-control" id="image" >
+    <label for="image" class="form-label">Upload Image</label>
+    <input type="file" name="listing[image]"  class="form-control" id="image" >
     <div class="invalid-feedback text-white">
-      Please Enter Image URL!
+      Please upload Image!
     </div>
   </div>
   <div class="mb-3">
     <label for="price" class="form-label">Price</label>
-    <input type="number" name="price" class="form-control" id="price" required>
+    <input type="number" name="listing[price]" class="form-control" id="price" required>
     <div class="invalid-feedback text-white">
       Please Enter  Price!
     </div>
   </div>
   <div class="mb-3">
     <label for="location" class="form-label">Location</label>
-    <input type="text" name="location" class="form-control" id="location" required>
+    <input type="text" name="listing[location]" class="form-control" id="location" required>
     <div class="invalid-feedback text-white">
       Please Enter Location!
     </div>
   </div>
   <div class="mb-3">
     <label for="country" class="form-label">Country</label>
-    <input type="text" name="country" class="form-control" id="country" required>
+    <input type="text" name="listing[country]" class="form-control" id="country" required>
     <div class="invalid-feedback text-white">
       Please Enter Country!
     </div>

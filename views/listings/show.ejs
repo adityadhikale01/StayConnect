@@ -25,13 +25,13 @@
     <div class="show-body">
     <div class="details-container ">
         <h1><%= show_listing.title %></h1>
-        <img src="<%= show_listing.image %>" class="img-fluid" alt="Listing Image" style="max-width: 400px;">
-        <p>Owner Of Listings:@<i><%=show_listing.owner.username%></i></p>
+        <img src="<%= show_listing.image && show_listing.image.url ? show_listing.image.url : '/images/listing_1_.jpg' %>" class="img-fluid" alt="Listing Image" style="max-width: 400px;">
+        <p>Owner Of Listings:@<i><%= show_listing.owner ? show_listing.owner.username : "Unknown" %></i></p>
         <p><%= show_listing.description %></p>
         <p> <b>Price:</b> <%= show_listing.price %></p>
         <p> <b>Location:</b> <%= show_listing.location %></p>
         <p> <b>Country:</b> <%= show_listing.country %></p>
-        <% if(currUser && currUser._id.equals(show_listing.owner._id)) {%>
+        <% if(currUser && show_listing.owner && currUser._id.equals(show_listing.owner._id)){ %>
         <a class="btn btn-primary" href="/listings/<%= show_listing._id %>/edit" role="button">Edit</a>
         <form action="/listings/<%= show_listing._id %>?_method=DELETE" method="post">
             
@@ -41,6 +41,7 @@
      </div>
    
     <div class="reviews-form ">
+        <% if(currUser){ %>
         <form action="/listings/<%= show_listing._id %>/reviews"  novalidate class="needs-validation" method="post">
             <div class="row">
             <div class="mb-3 col ">
@@ -65,16 +66,21 @@
         </div>
             <button type="submit" class="btn btn-success">Submit Review</button>
         </form>
+        <% } %>
+        <% if(!currUser){ %>
+           <button class="btn btn-success"><a style="text-decoration: none; color: antiquewhite;" href="/users/login"> <i>Login to Create Review!</i></a></button>
+        <% } %>
     </div>
     
     <div class=" reviews" id="reviews">
-        <h2>Reviews</h2>
+        <h2>Reviews:</h2>
        <% for(let review of show_listing.reviews) { %>
     <div class="card mb-3">
         <div class="card-body">
             <h6 class="card-title">Review</h6>
             <p class="card-text"><%= review.comment %></p>
             <div class="card-text">
+                <h2 class="card-title"> <i>Createdby:@</i><%= review.author ? review.author.username : "Unknown" %></h2>
                 <div class="review-stars" aria-label="Rating: <%= review.rating %> out of 5">
                     <% for (let i = 1; i <= 5; i++) { %>
                         <span class="star <%= i <= review.rating ? '' : 'inactive' %>">&#9733;</span>
@@ -82,9 +88,11 @@
                 </div>
             </div>
             <p><small class="text-muted">Created: <%= review.CreatedAt.toLocaleString() %></small></p>
+            <% if (currUser && review.author && currUser._id.equals(review.author._id)) { %>
             <form action="/listings/<%= show_listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="post">
                 <button class="btn btn-danger btn-sm" type="submit">Delete</button>
             </form>
+            <% } %>
         </div>
     </div>
 <% } %>

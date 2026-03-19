@@ -5,7 +5,7 @@
         <% for(let listing of  allListings) { %>  
         <div class="col-lg-3 col-md-4 col-sm-6 col-12">
             <div class="card listing-card h-100">
-                <img src="<%= listing.image %>" class="card-img-top card-img-uniform" alt="...">
+                <img src="<%= listing.image && listing.image.url ? listing.image.url : '/images/listing_1_.jpg' %>" class="card-img-top card-img-uniform" alt="...">
                 <div class="card-body">
                     <h5 class="card-title"><%= listing.title %></h5>             
                     <h6 class="card-subtitle mb-2 text-muted"><%= listing.price %></h6>

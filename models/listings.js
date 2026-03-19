@@ -6,7 +6,9 @@ const schema = mongoose.Schema;
 const listingSchema = new schema({
     title: { type: String },
     description: { type: String },
-    image: { type: String },
+    image: { filename: String,
+             url:String
+     },
     price: { type: Number },
     location: { type: String },
     country: { type: String },
@@ -23,7 +25,7 @@ const listingSchema = new schema({
 
 // Delete all reviews associated with the listing
 listingSchema.post("findOneAndDelete", async (listing) => {
-  if (listing.reviews.length) {  
+  if (listing && listing.reviews.length) {  
   await Review.deleteMany({ _id: { $in: listing.reviews } });
   }
 });
