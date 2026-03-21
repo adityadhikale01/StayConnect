@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import methodOverride from 'method-override';
 import ejsMate from 'ejs-mate';
 import session from 'express-session';
+import MongoStore from "connect-mongo";
 import listings from './routes/listings.js';
 import reviews from './routes/reviews.js';
 import Users from './routes/users.js';
@@ -21,13 +22,27 @@ import localStratagy from 'passport-local';
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const MONGO_URL = "mongodb://127.0.0.1:27017/StayConnect";
+const dburl=process.env.MONGO_URL;
 
 app.engine('ejs', ejsMate);
 
+//mongo ssssesion store
+const store=MongoStore.create({
+  mongoUrl:dburl,
+  crypto:{
+    secret:process.env.MY_SECREAT,
+  },
+  touchAfter:24*3600
+});
+
+store.on("error",()=>{
+  console.log("ERROR DUE TO MONGO SESSION STORE",err);
+})
+
 // Session Options 
 const sessionOptions = {
-    secret: 'thisisasecret',
+    store:store,
+    secret:process.env.MY_SECREAT,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -77,7 +92,7 @@ main()
     console.log(err);
   });
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dburl);
 }
 
 
