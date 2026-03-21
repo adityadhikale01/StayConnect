@@ -3,6 +3,8 @@ import Review from './models/reviews.js';
 import {ExpressError} from './utils/Expresserror.js';
 import { reviewSchema } from './schema.js';
 import { listingSchema } from './schema.js';
+import multer from 'multer';
+
 
 const isLoggedIn=  (req, res, next) => {
     if(req.isAuthenticated()){

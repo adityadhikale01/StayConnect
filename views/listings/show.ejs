@@ -71,7 +71,7 @@
            <button class="btn btn-success"><a style="text-decoration: none; color: antiquewhite;" href="/users/login"> <i>Login to Create Review!</i></a></button>
         <% } %>
     </div>
-    
+    <%if(show_listing.reviews.length >0) { %>
     <div class=" reviews" id="reviews">
         <h2>Reviews:</h2>
        <% for(let review of show_listing.reviews) { %>
@@ -97,6 +97,31 @@
     </div>
 <% } %>
     </div>
+     <% } %>
+
+     <div class="mb-3 col ">
+        <h1>Where Will Be You!</h1>
+         <div id="map"></div>
+    </div>
+     
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Coordinates passed from Express
+    const lat = 20.0206;
+    const lng = 73.7907;
+
+    const map = L.map('map').setView([lat, lng], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Example marker
+    L.marker([lat, lng]).addTo(map)
+      .bindPopup('Hello from Nashik!')
+      .openPopup();
+  </script>
 </div>
 
 <script>
@@ -162,6 +187,10 @@
                 document.querySelectorAll('.star-rating[data-input-id]').forEach(function(el){ initStarWidget(el); });
             });
         })();
+
+       
+
+
 </script>
 </body>
 

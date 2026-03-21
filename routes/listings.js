@@ -35,12 +35,19 @@ router.route("/:id")
       .get(
       WrapAsync(show) 
       )
+      /* DELETE ROUTE */
       .delete(
       isLoggedIn,
       isOwner,
       WrapAsync(deleteListing)
       )
-      .put( isLoggedIn,isOwner,validateListing, WrapAsync( updateListing));
+      /* UPDATE ROUTE */
+      .put( isLoggedIn
+            ,isOwner,
+            upload.single("listing[image]"),
+            validateListing,
+            
+            WrapAsync( updateListing));
 
       
 
@@ -48,14 +55,17 @@ router.route("/:id")
 
 
 
-/* DELETE ROUTE */
+
 
 
 
 /* EDIT ROUTE */
 
-router.get("/:id/edit",isLoggedIn,isOwner ,WrapAsync(editListingForm));
-/* UPDATE ROUTE */
+router.get("/:id/edit",
+            isLoggedIn,
+            isOwner,       
+            WrapAsync(editListingForm)
+      );
 
 
 export default router;

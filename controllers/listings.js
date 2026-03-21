@@ -1,5 +1,6 @@
 import Listing from '../models/listings.js';
 import {ExpressError} from '../utils/Expresserror.js';
+import {v2 as cloudinary} from 'cloudinary';
 
 const DEFAULT_IMAGE = {
     url: "/images/listing_1_.jpg",
@@ -59,8 +60,14 @@ const postListing=async (req, res) => {
     res.redirect("/listings");
 }
 
-    const deleteListing=async (req, res) => {
-  const { id } = req.params;
+const deleteListing=async (req, res) => {
+    const { id } = req.params;
+    let listing= await Listing.findById(id);
+    console.log(listing);
+    let publicId=listing.image.filename;
+   
+    const result = await cloudinary.uploader.destroy(publicId);
+    
     await Listing.findByIdAndDelete(id);
     req.flash('success', 'Listing deleted successfully!');
     res.redirect("/listings");
@@ -68,7 +75,7 @@ const postListing=async (req, res) => {
   
 }
 const editListingForm =async (req,res)=>{
- 
+
         const { id } = req.params;
         
         const edit_listing = await Listing.findById(id);
@@ -80,11 +87,13 @@ const editListingForm =async (req,res)=>{
         }
       
 }
-const updateListing=async (req, res) => {
-  const { id } = req.params;
-  const { title, description, price, location, country } = req.body.listing || req.body;
 
-  const updatedListing = await Listing.findByIdAndUpdate(
+const updateListing=async (req, res) => {
+    
+    const { id } = req.params;
+    const { title, description, price, location, country } = req.body.listing || req.body;
+     
+    const updatedListing = await Listing.findByIdAndUpdate(
     id,
     { title, description, price, location, country },
     { runValidators: true, new: true }
@@ -93,7 +102,19 @@ const updateListing=async (req, res) => {
   if (!updatedListing) {
     throw new ExpressError("Listing not found", 404);
   }
-
+  if (req.file) {
+        const url = req.file.path;
+        const filename = req.file.filename;
+        let publicId=updatedListing.image.filename;
+        updatedListing.image = { url, filename };
+        await updatedListing.save();
+        await cloudinary.uploader.destroy(publicId);
+        
+    } else {
+        updatedListing.image = DEFAULT_IMAGE;
+    }
+    
+   
   res.redirect(`/listings/${id}`);
   
 }
