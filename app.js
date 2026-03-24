@@ -22,11 +22,13 @@ import localStratagy from 'passport-local';
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dburl=process.env.MONGO_URL;
+const MONGOURL="mongodb://127.0.0.1:27017/StayConnect";
+//const dburl=process.env.mongoUrl;
 
 app.engine('ejs', ejsMate);
 
 //mongo ssssesion store
+/*
 const store=MongoStore.create({
   mongoUrl:dburl,
   crypto:{
@@ -38,10 +40,10 @@ const store=MongoStore.create({
 store.on("error",()=>{
   console.log("ERROR DUE TO MONGO SESSION STORE",err);
 })
-
+*/
 // Session Options 
 const sessionOptions = {
-    store:store,
+   // store:store,
     secret:process.env.MY_SECREAT,
     resave: false,
     saveUninitialized: true,
@@ -92,7 +94,7 @@ main()
     console.log(err);
   });
 async function main() {
-  await mongoose.connect(dburl);
+  await mongoose.connect(MONGOURL);
 }
 
 
@@ -100,6 +102,11 @@ app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.locals.currUser = req.user;
+    res.locals.searchFilters = {
+        where: req.query.where || "",
+        when: req.query.when || "",
+        who: req.query.who || ""
+    };
     next();
 });
 

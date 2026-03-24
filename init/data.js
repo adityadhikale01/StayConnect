@@ -10,6 +10,10 @@ const sampleListings = [
     price: 1500,
     location: "Malibu",
     country: "United States",
+    coordinates: {
+      longitude: -118.7798,
+      latitude: 34.0259,
+    },
   },
   {
     title: "Modern Loft in Downtown",
@@ -22,6 +26,10 @@ const sampleListings = [
     price: 1200,
     location: "New York City",
     country: "United States",
+    coordinates: {
+      longitude: -74.006,
+      latitude: 40.7128,
+    },
   },
   {
     title: "Mountain Retreat",
@@ -34,6 +42,10 @@ const sampleListings = [
     price: 1000,
     location: "Aspen",
     country: "United States",
+    coordinates: {
+      longitude: -106.8175,
+      latitude: 39.1911,
+    },
   },
   {
     title: "Historic Villa in Tuscany",
@@ -45,6 +57,10 @@ const sampleListings = [
     price: 2500,
     location: "Florence",
     country: "Italy",
+    coordinates: {
+      longitude: 11.2558,
+      latitude: 43.7696,
+    },
   },
   {
     title: "Secluded Treehouse Getaway",
@@ -56,6 +72,10 @@ const sampleListings = [
     price: 800,
     location: "Portland",
     country: "United States",
+    coordinates: {
+      longitude: -122.6784,
+      latitude: 45.5152,
+    },
   },
   {
     title: "Beachfront Paradise",
@@ -67,6 +87,10 @@ const sampleListings = [
     price: 2000,
     location: "Cancun",
     country: "Mexico",
+    coordinates: {
+      longitude: -86.8515,
+      latitude: 21.1619,
+    },
   },
   {
     title: "Rustic Cabin by the Lake",
@@ -78,6 +102,10 @@ const sampleListings = [
     price: 900,
     location: "Lake Tahoe",
     country: "United States",
+    coordinates: {
+      longitude: -120.0324,
+      latitude: 39.0968,
+    },
   },
   {
     title: "Luxury Penthouse",
@@ -89,6 +117,10 @@ const sampleListings = [
     price: 3500,
     location: "Los Angeles",
     country: "United States",
+    coordinates: {
+      longitude: -118.2437,
+      latitude: 34.0522,
+    },
   },
   {
     title: "Safari Lodge",
@@ -100,6 +132,10 @@ const sampleListings = [
     price: 4000,
     location: "Serengeti",
     country: "Tanzania",
+    coordinates: {
+      longitude: 34.8333,
+      latitude: -2.3333,
+    },
   },
   {
     title: "Private Island",
@@ -111,6 +147,10 @@ const sampleListings = [
     price: 10000,
     location: "Fiji",
     country: "Fiji",
+    coordinates: {
+      longitude: 178.065,
+      latitude: -17.7134,
+    },
   },
 ];
 

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Review from '../models/reviews.js';
+ 
 
 const schema = mongoose.Schema;
 
@@ -19,6 +20,10 @@ const listingSchema = new schema({
     owner:{
       type:schema.Types.ObjectId,
       ref:"User"
+    },
+    coordinates:{
+      longitude:Number,
+      latitude:Number
     }
 
 }); 

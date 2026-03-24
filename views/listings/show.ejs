@@ -100,26 +100,27 @@
      <% } %>
 
      <div class="mb-3 col ">
-        <h1>Where Will Be You!</h1>
+        <h1>Where Will Be You! </h1>
          <div id="map"></div>
     </div>
      
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // Coordinates passed from Express
-    const lat = 20.0206;
-    const lng = 73.7907;
-
+    // Coordinates passed from EJS (with fallback)
+    const lat =' <%-show_listing.coordinates && typeof show_listing.coordinates.latitude === "number" ? show_listing.coordinates.latitude : 20.0206 %>';
+    const lng ='<%-show_listing.coordinates && typeof show_listing.coordinates.longitude === "number" ? show_listing.coordinates.longitude : 73.7907 %>';
+    const popupText =' <%-JSON.stringify((show_listing.location || "Listing location") + ", " + (show_listing.country || "")) %>';
+    console.log(lat,lng);
     const map = L.map('map').setView([lat, lng], 12);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+      attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Example marker
+    // Marker for this listing
     L.marker([lat, lng]).addTo(map)
-      .bindPopup('Hello from Nashik!')
+      .bindPopup(popupText)
       .openPopup();
   </script>
 </div>
@@ -196,3 +197,4 @@
 
 
    
+

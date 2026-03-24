@@ -1,6 +1,7 @@
 import Listing from '../models/listings.js';
 import {ExpressError} from '../utils/Expresserror.js';
 import {v2 as cloudinary} from 'cloudinary';
+import axios from 'axios';
 
 const DEFAULT_IMAGE = {
     url: "/images/listing_1_.jpg",
@@ -46,6 +47,31 @@ const postListing=async (req, res) => {
     const { title, description, price, location, country } = req.body.listing;
     const newListing = new Listing({ title, description, price, location, country });
     newListing.owner = req.user._id;
+    
+
+    if (!location || !country) {
+        return res.status(400).json({ error: 'Location and country required' });
+    }
+      // You can use  
+      const address=location;
+    console.log("reached here");
+      const response = await axios.get("https://api.opencagedata.com/geocode/v1/json", {
+      params: {
+        q: address,
+        key: process.env.OPENCAGE_KEY, // keep your key in .env
+        limit: 1
+      }
+      });
+      const data = response.data.results[0];
+      console.log(data);
+        if (data.length === 0) {
+            return res.status(404).json({ error: 'Coordinates not found' });
+        }
+
+        const { lat, lon } = data;
+        console.log(lat,lon);
+        newListing.coordinates.latitude=lat;
+        newListing.coordinates.longitude=lon;
 
     if (req.file) {
         const url = req.file.path;

@@ -5,7 +5,13 @@
         <% for(let listing of  allListings) { %>  
         <div class="col-lg-3 col-md-4 col-sm-6 col-12">
             <div class="card listing-card h-100">
-                <img src="<%= listing.image && listing.image.url ? listing.image.url : '/images/listing_1_.jpg' %>" class="card-img-top card-img-uniform" alt="...">
+                <div class="card-img-wrapper">
+                    <img src="<%= listing.image && listing.image.url ? listing.image.url : '/images/listing_1_.jpg' %>" class="card-img-top card-img-uniform" alt="<%= listing.title %>">
+                    <button type="button" class="like-btn" aria-label="Like <%= listing.title %>" onclick="toggleLike(this)">
+                        <i class="fa fa-heart" aria-hidden="true"></i>
+                    </button>
+                </div>
+                
                 <div class="card-body">
                     <h5 class="card-title"><%= listing.title %></h5>             
                     <h6 class="card-subtitle mb-2 text-muted"><%= listing.price %></h6>
@@ -13,7 +19,17 @@
                 </div>
             </div>
         </div>
+        
+
+
+        
         <% } %>
   </div>
 </div>
+<script>
+  // Toggle like state
+  function toggleLike(btn) {
+    btn.classList.toggle('liked');
+  }
+</script>
 </body>
