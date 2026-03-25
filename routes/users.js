@@ -2,8 +2,16 @@ import express from 'express';
 const router=express.Router();
 
 import passport from 'passport';
-import { saveRedirectUrl } from '../middleware.js';
-import { loginForm, postLogin, postSignup, signupForm } from '../controllers/users.js';
+import WrapAsync from '../utils/WrapAsync.js';
+import { isLoggedIn, saveRedirectUrl } from '../middleware.js';
+import {
+    loginForm,
+    postLogin,
+    postSignup,
+    profilePage,
+    signupForm,
+    toggleWishlist
+} from '../controllers/users.js';
 
 //get Signup Form//Post Singup data
 router
@@ -25,6 +33,8 @@ router.route("/login")
     loginForm
 );    
 router.get("/logout", postLogin);
+router.get("/profile", isLoggedIn, WrapAsync(profilePage));
+router.post("/wishlist/:listingId", isLoggedIn, WrapAsync(toggleWishlist));
 
 
 

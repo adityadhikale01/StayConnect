@@ -1,4 +1,6 @@
 import User from '../models/users.js';
+import Listing from '../models/listings.js';
+
 const signupForm=(req, res) => {
     res.render("users/signup.ejs", { layout: 'layouts/boilerplate' });
 }
@@ -50,4 +52,56 @@ const loginForm=(req, res) => {
     });
 }
 
-export {signupForm,postSignup,loginForm,postLogin};
+const profilePage = async (req, res) => {
+    const userProfile = await User.findById(req.user._id).populate({
+        path: "wishlist",
+        populate: { path: "owner", select: "username" }
+    });
+
+    if (!userProfile) {
+        req.flash("error", "Profile not found.");
+        return res.redirect("/listings");
+    }
+
+    const ownListings = await Listing.find({ owner: req.user._id }).sort({ _id: -1 });
+    const wishlistListings = (userProfile.wishlist || []).filter(Boolean);
+
+    res.render("users/profile.ejs", {
+        layout: "layouts/boilerplate",
+        userProfile,
+        ownListings,
+        wishlistListings
+    });
+};
+
+const toggleWishlist = async (req, res) => {
+    const { listingId } = req.params;
+    const listing = await Listing.findById(listingId);
+
+    if (!listing) {
+        req.flash("error", "Listing not found.");
+        return res.redirect("/listings");
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+        req.flash("error", "User not found.");
+        return res.redirect("/users/login");
+    }
+    user.wishlist = user.wishlist || [];
+    const alreadyWishlisted = user.wishlist.some((id) => id.equals(listing._id));
+
+    if (alreadyWishlisted) {
+        user.wishlist.pull(listing._id);
+        req.flash("success", "Removed from wishlist.");
+    } else {
+        user.wishlist.push(listing._id);
+        req.flash("success", "Added to wishlist.");
+    }
+
+    await user.save();
+    const redirectTo = req.get("referer") || "/listings";
+    res.redirect(redirectTo);
+};
+
+export {signupForm,postSignup,loginForm,postLogin,profilePage,toggleWishlist};

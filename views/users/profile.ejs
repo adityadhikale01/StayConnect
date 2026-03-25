@@ -1,0 +1,89 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="profile-page">
+    <section class="profile-hero">
+        <div class="profile-avatar" aria-hidden="true">
+            <%= (userProfile.username || "U").charAt(0).toUpperCase() %>
+        </div>
+        <div>
+            <h1 class="profile-name">@<%= userProfile.username %></h1>
+            <p class="profile-email">
+                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                <span><%= userProfile.email %></span>
+            </p>
+            <p class="profile-meta">
+                <span><%= ownListings.length %> own listings</span>
+                <span><%= wishlistListings.length %> wishlist listings</span>
+            </p>
+        </div>
+    </section>
+
+    <section class="profile-section">
+        <div class="profile-section-head">
+            <h2>Your Listings</h2>
+            <a href="/listings/new" class="btn btn-sm btn-primary">Add New Listing</a>
+        </div>
+
+        <% if (!ownListings.length) { %>
+            <div class="profile-empty">
+                <p>You have not posted any listings yet.</p>
+                <a href="/listings/new" class="btn btn-primary">Create your first listing</a>
+            </div>
+        <% } else { %>
+            <div class="row g-3">
+                <% for (let listing of ownListings) { %>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="card profile-listing-card h-100">
+                            <img src="<%= listing.image && listing.image.url ? listing.image.url : '/images/listing_1_.jpg' %>" class="card-img-top card-img-uniform" alt="<%= listing.title %>">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= listing.title %></h5>
+                                <p class="card-text text-muted mb-2"><%= listing.location %>, <%= listing.country %></p>
+                                <p class="card-text fw-semibold mb-3">Rs. <%= listing.price %></p>
+                                <div class="d-flex gap-2">
+                                    <a href="/listings/<%= listing._id %>" class="btn btn-primary btn-sm">View</a>
+                                    <a href="/listings/<%= listing._id %>/edit" class="btn btn-outline-primary btn-sm">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+    </section>
+
+    <section class="profile-section">
+        <div class="profile-section-head">
+            <h2>Wishlist Listings</h2>
+        </div>
+
+        <% if (!wishlistListings.length) { %>
+            <div class="profile-empty">
+                <p>Your wishlist is empty right now.</p>
+                <a href="/listings" class="btn btn-primary">Explore listings</a>
+            </div>
+        <% } else { %>
+            <div class="row g-3">
+                <% for (let listing of wishlistListings) { %>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="card profile-listing-card h-100">
+                            <div class="card-img-wrapper">
+                                <img src="<%= listing.image && listing.image.url ? listing.image.url : '/images/listing_1_.jpg' %>" class="card-img-top card-img-uniform" alt="<%= listing.title %>">
+                                <form action="/users/wishlist/<%= listing._id %>" method="post" class="wishlist-form">
+                                    <button type="submit" class="like-btn liked" aria-label="Remove <%= listing.title %> from wishlist">
+                                        <i class="fa fa-heart" aria-hidden="true"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"><%= listing.title %></h5>
+                                <p class="card-text text-muted mb-2"><%= listing.location %>, <%= listing.country %></p>
+                                <p class="card-text fw-semibold mb-3">Rs. <%= listing.price %></p>
+                                <a href="/listings/<%= listing._id %>" class="btn btn-primary btn-sm">View</a>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+    </section>
+</div>

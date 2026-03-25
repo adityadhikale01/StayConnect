@@ -1,35 +1,38 @@
 <% layout('layouts/boilerplate') %>
-<body>
+<% const wishlistSet = new Set((wishlistedIds || []).map(String)); %>
+
+<%- include('../includes/filter.ejs') %>
+
 <div class="row g-3">
-       
-        <% for(let listing of  allListings) { %>  
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div class="card listing-card h-100">
-                <div class="card-img-wrapper">
-                    <img src="<%= listing.image && listing.image.url ? listing.image.url : '/images/listing_1_.jpg' %>" class="card-img-top card-img-uniform" alt="<%= listing.title %>">
-                    <button type="button" class="like-btn" aria-label="Like <%= listing.title %>" onclick="toggleLike(this)">
+    <% for (let listing of allListings) { %>
+    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+        <div class="card listing-card h-100">
+            <div class="card-img-wrapper">
+                <img src="<%= listing.image && listing.image.url ? listing.image.url : '/images/listing_1_.jpg' %>" class="card-img-top card-img-uniform" alt="<%= listing.title %>">
+
+                <% if (currUser) { %>
+                <form action="/users/wishlist/<%= listing._id %>" method="post" class="wishlist-form">
+                    <button
+                        type="submit"
+                        class="like-btn <%= wishlistSet.has(String(listing._id)) ? 'liked' : '' %>"
+                        aria-label="<%= wishlistSet.has(String(listing._id)) ? 'Remove from wishlist' : 'Add to wishlist' %> <%= listing.title %>"
+                    >
                         <i class="fa fa-heart" aria-hidden="true"></i>
                     </button>
-                </div>
-                
-                <div class="card-body">
-                    <h5 class="card-title"><%= listing.title %></h5>             
-                    <h6 class="card-subtitle mb-2 text-muted"><%= listing.price %></h6>
-                    <a href="/listings/<%= listing._id %>" class="btn btn-primary">Show More</a>
-                </div>
+                </form>
+                <% } else { %>
+                <a href="/users/login" class="like-btn" aria-label="Log in to add <%= listing.title %> to wishlist">
+                    <i class="fa fa-heart" aria-hidden="true"></i>
+                </a>
+                <% } %>
+            </div>
+
+            <div class="card-body">
+                <h5 class="card-title"><%= listing.title %></h5>
+                <h6 class="card-subtitle mb-2 text-muted"><%= listing.price %></h6>
+                <a href="/listings/<%= listing._id %>" class="btn btn-primary">Show More</a>
             </div>
         </div>
-        
-
-
-        
-        <% } %>
-  </div>
+    </div>
+    <% } %>
 </div>
-<script>
-  // Toggle like state
-  function toggleLike(btn) {
-    btn.classList.toggle('liked');
-  }
-</script>
-</body>

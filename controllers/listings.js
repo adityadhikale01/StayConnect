@@ -1,4 +1,5 @@
 import Listing from '../models/listings.js';
+import User from '../models/users.js';
 import {ExpressError} from '../utils/Expresserror.js';
 import {v2 as cloudinary} from 'cloudinary';
 import axios from 'axios';
@@ -11,8 +12,18 @@ const DEFAULT_IMAGE = {
 const index=async (req, res) => {
         
         const allListings = await Listing.find({});
-        
-        res.render('listings/index.ejs', { layout: 'layouts/boilerplate', allListings });
+        let wishlistedIds = [];
+
+        if (req.user) {
+            const userWithWishlist = await User.findById(req.user._id).select("wishlist");
+            wishlistedIds = (userWithWishlist?.wishlist || []).map((id) => id.toString());
+        }
+
+        res.render('listings/index.ejs', {
+            layout: 'layouts/boilerplate',
+            allListings,
+            wishlistedIds
+        });
 }
 
 const createListingForm=(req, res) => {
@@ -63,15 +74,15 @@ const postListing=async (req, res) => {
       }
       });
       const data = response.data.results[0];
-      console.log(data);
+      
         if (data.length === 0) {
             return res.status(404).json({ error: 'Coordinates not found' });
         }
 
-        const { lat, lon } = data;
-        console.log(lat,lon);
+        const { lat, lng} = data.geometry;
+        
         newListing.coordinates.latitude=lat;
-        newListing.coordinates.longitude=lon;
+        newListing.coordinates.longitude=lng;
 
     if (req.file) {
         const url = req.file.path;
