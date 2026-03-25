@@ -1,5 +1,4 @@
 import "dotenv/config";
-
 import express from 'express';
 import mongoose from 'mongoose';
 import path from 'path';
@@ -23,6 +22,15 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const MONGOURL="mongodb://127.0.0.1:27017/StayConnect";
+const sessionSecret =
+  process.env.SESSION_SECRET ||
+  process.env.MY_SECRET ||
+  process.env.MY_SECREAT ||
+  "change-this-development-secret";
+
+if (!process.env.SESSION_SECRET && !process.env.MY_SECRET && !process.env.MY_SECREAT) {
+  console.warn("SESSION_SECRET is not set in .env. Using a fallback secret for local development only.");
+}
 //const dburl=process.env.mongoUrl;
 
 app.engine('ejs', ejsMate);
@@ -44,7 +52,7 @@ store.on("error",()=>{
 // Session Options 
 const sessionOptions = {
    // store:store,
-    secret:process.env.MY_SECREAT,
+    secret:sessionSecret,
     resave: false,
     saveUninitialized: true,
     cookie: {

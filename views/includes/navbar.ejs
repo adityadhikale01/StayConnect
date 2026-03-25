@@ -1,4 +1,6 @@
 <nav class="airbnb-nav">
+  <% const filters = (typeof searchFilters !== "undefined" && searchFilters) ? searchFilters : { where: "", when: "", who: "" }; %>
+  <% const user = (typeof currUser !== "undefined") ? currUser : null; %>
   <div class="container-fluid airbnb-nav-inner">
     <a class="airbnb-brand" href="/listings" aria-label="StayConnect Home">
       <div class="logo"></div>
@@ -8,17 +10,17 @@
     <form class="airbnb-search d-none d-md-flex" role="search" action="/listings" method="get">
       <div class="airbnb-search-field airbnb-search-field--where">
         <label class="airbnb-search-label" for="nav-where">Where</label>
-        <input id="nav-where" class="airbnb-search-field-input" type="search" name="where" value="<%= searchFilters.where %>" placeholder="Search destinations">
+        <input id="nav-where" class="airbnb-search-field-input" type="search" name="where" value="<%= filters.where %>" placeholder="Search destinations">
       </div>
       <span class="airbnb-search-divider"></span>
       <div class="airbnb-search-field airbnb-search-field--when">
         <label class="airbnb-search-label" for="nav-when">When</label>
-        <input id="nav-when" class="airbnb-search-field-input" type="text" name="when" value="<%= searchFilters.when %>" placeholder="Add dates">
+        <input id="nav-when" class="airbnb-search-field-input" type="text" name="when" value="<%= filters.when %>" placeholder="Add dates">
       </div>
       <span class="airbnb-search-divider"></span>
       <div class="airbnb-search-field airbnb-search-field--who">
         <label class="airbnb-search-label" for="nav-who">Who</label>
-        <input id="nav-who" class="airbnb-search-field-input" type="text" name="who" value="<%= searchFilters.who %>" placeholder="Add guests">
+        <input id="nav-who" class="airbnb-search-field-input" type="text" name="who" value="<%= filters.who %>" placeholder="Add guests">
       </div>
       <button class="airbnb-search-icon" type="submit" aria-label="Search listings">
         <i class="fa fa-search" aria-hidden="true"></i>
@@ -37,12 +39,12 @@
           <i class="fa fa-user-circle" aria-hidden="true"></i>
         </button>
         <ul class="dropdown-menu dropdown-menu-end airbnb-menu">
-          <% if(!currUser) { %>
+          <% if(!user) { %>
           <li><a class="dropdown-item" href="/users/signup">Sign up</a></li>
           <li><a class="dropdown-item" href="/users/login">Log in</a></li>
           <% } %>
 
-          <% if(currUser) { %>
+          <% if(user) { %>
           <li><a class="dropdown-item" href="/users/profile">Profile</a></li>
           <li><a class="dropdown-item" href="/users/logout">Log out</a></li>
           <% } %>
@@ -58,15 +60,15 @@
     <form class="airbnb-search airbnb-search-mobile" role="search" action="/listings" method="get">
       <div class="airbnb-search-field airbnb-search-field--where">
         <label class="airbnb-search-label" for="nav-where-mobile">Where</label>
-        <input id="nav-where-mobile" class="airbnb-search-field-input" type="search" name="where" value="<%= searchFilters.where %>" placeholder="Search destinations">
+        <input id="nav-where-mobile" class="airbnb-search-field-input" type="search" name="where" value="<%= filters.where %>" placeholder="Search destinations">
       </div>
       <div class="airbnb-search-field airbnb-search-field--when">
         <label class="airbnb-search-label" for="nav-when-mobile">When</label>
-        <input id="nav-when-mobile" class="airbnb-search-field-input" type="text" name="when" value="<%= searchFilters.when %>" placeholder="Add dates">
+        <input id="nav-when-mobile" class="airbnb-search-field-input" type="text" name="when" value="<%= filters.when %>" placeholder="Add dates">
       </div>
       <div class="airbnb-search-field airbnb-search-field--who">
         <label class="airbnb-search-label" for="nav-who-mobile">Who</label>
-        <input id="nav-who-mobile" class="airbnb-search-field-input" type="text" name="who" value="<%= searchFilters.who %>" placeholder="Add guests">
+        <input id="nav-who-mobile" class="airbnb-search-field-input" type="text" name="who" value="<%= filters.who %>" placeholder="Add guests">
       </div>
       <button class="airbnb-search-icon airbnb-search-icon-mobile" type="submit" aria-label="Search listings">
         <i class="fa fa-search" aria-hidden="true"></i>
