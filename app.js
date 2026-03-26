@@ -1,4 +1,5 @@
 import "dotenv/config";
+console.log(process.env.MONGO_URL);
 import express from 'express';
 import mongoose from 'mongoose';
 import path from 'path';
