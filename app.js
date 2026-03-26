@@ -21,7 +21,8 @@ import localStratagy from 'passport-local';
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const MONGOURL="mongodb://127.0.0.1:27017/StayConnect";
+const MONGOURL=process.env.MONGO_URL;
+ 
 const sessionSecret =
   process.env.SESSION_SECRET ||
   process.env.MY_SECRET ||
@@ -36,9 +37,9 @@ if (!process.env.SESSION_SECRET && !process.env.MY_SECRET && !process.env.MY_SEC
 app.engine('ejs', ejsMate);
 
 //mongo ssssesion store
-/*
+
 const store=MongoStore.create({
-  mongoUrl:dburl,
+  mongoUrl:MONGOURL,
   crypto:{
     secret:process.env.MY_SECREAT,
   },
@@ -47,8 +48,8 @@ const store=MongoStore.create({
 
 store.on("error",()=>{
   console.log("ERROR DUE TO MONGO SESSION STORE",err);
-})
-*/
+});
+
 // Session Options 
 const sessionOptions = {
    // store:store,
