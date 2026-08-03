@@ -1,4 +1,6 @@
-# StayConnect
+# FRONTEND AND BACKEND BOTH ARE RENDER THROUGH SAME SERVER DUE TO WHICH THE LOAD ON SERVER ,EXTRA HTML,CSS SEND FOR EACH DIFFRENT PAGE
+
+# StayConnect (ejs Based Frontend Rendering)
 
 StayConnect is a full-stack property listing platform inspired by Airbnb. Users can sign up, log in, create and manage listings, upload images, leave reviews, and save listings to a wishlist.
 
